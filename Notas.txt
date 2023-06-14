@@ -1,0 +1,24 @@
+docker run --name base_postgres -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=password -e POSTGRES_DB=nodejs -p 5432:5432 -d postgres
+
+
+
+Relations in ESM projects
+If you use ESM in your TypeScript project, you should use the Relation wrapper type 
+in relation properties to avoid circular dependency issues. 
+Let's modify our entities:
+
+AUTHOR 
+@Field(() => Book)
+@OneToMany(() => Book, (book) => book.author, {nullable: true})
+books: Relation<Book[]>
+
+Book
+@Field(() => Author)
+@ManyToOne(() => Author, (author) => author.books, {nullable: true})
+author: Relation<Author>
+
+Problema Resuelto, Entity to Repository, Se instancia un repositorio desde el metodo getRepository del objeto AppDataSource
+authorRepository = AppDataSource.getRepository(Author);
+
+Problema con findOne ---> Se resuelve con findOneBy
+return await this.authorRepository.findOneBy({id:input.id}) 
